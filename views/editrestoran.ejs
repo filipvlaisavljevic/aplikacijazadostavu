@@ -1,0 +1,267 @@
+<div class="row">
+    <div class="col-md-12 mt-4">
+        <h4 class="mb-3">Osnovne informacije o restoranu</h4>
+        <h6 class="mb-5"><i class="fas fa-info-circle mr-1"></i>Ovdje možete promijeniti naziv restorana, adresu i kategoriju.
+        </h6>
+        <hr>
+        <div class="row">
+            <div class="col-md-12 mt-4">
+                <h4 class="mb-3">Pošalji izvještaj za ovaj mjesec</h4>
+                <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Ukoliko želite detaljan izvještaj o ovome mjesecu možete ga dobiti na Vaš email.</h6>
+                <form class="form-group" method="post" action="/editrestoran/izvjestaj/<%=restoran.rid%>">
+                    <button class="form-control btn btn-danger" type="submit">Pošalji izvještaj</button>
+                </form>
+            </div>
+        </div>
+        <hr>
+        <table id="informacije" class="display dt-responsive nowrap" width="100%">
+            <thead>
+            <tr>
+                <th>Naziv restorana</th>
+                <th>Kategorija</th>
+                <th>Adresa</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <td>
+                    <form method="post" action="/editrestoran/promjenanaziva/<%=restoran.rid%>">
+                        <input type="text" name="promjena_naziva" placeholder="<%=restoran.naziv_restorana%>">
+                        <button type="submit" class="btn-sm btn-danger">Potvrdi</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="/editrestoran/promjenakategorije/<%=restoran.rid%>">
+                        <input type="text" name="promjena_kategorije" placeholder="<%=restoran.kategorija%>">
+                        <button type="submit" class="btn-sm btn-danger">Potvrdi</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="/editrestoran/promjenaulice/<%=restoran.rid%>">
+                        <input type="text" name="promjena_ulice" placeholder="<%=restoran.ulica%>">
+                        <button type="submit" class="btn-sm btn-danger">Potvrdi</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<hr>
+<div class="row mb-5">
+    <div class="col-md-12">
+        <h4 class="mb-3 mt-4">Promijeni sliku restorana</h4>
+        <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Odaberite sliku koja predstavlja Vaš restoran na naslovnoj stranici i stranici restorana.
+        </h6>
+        <form method="POST" action="/editrestoran/uploadslike/<%=restoran.rid%>" enctype="multipart/form-data">
+            <input type="file" name="image" />
+            <input type="submit" name="btn_upload_profile_pic" value="Upload" />
+        </form>
+    </div>
+</div>
+<hr>
+<div class="row mb-5">
+    <div class="col-md-12">
+        <h4 class="mb-3 mt-4">Promijeni radno vrijeme restorana</h4>
+        <form method="post" action="/editrestoran/radnovrijeme/<%=restoran.rid%>">
+            <div class="form-group">
+                <input type="text" name="radnovrijeme" class="form-control" placeholder="Unesite novo radno vrijeme" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger w-100">Ažuriraj radno vrijeme</button>
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
+<div class="row mb-5">
+    <div class="col-md-12">
+        <h4 class="mb-3 mt-4">Promijeni krug dostave restorana</h4>
+        <form method="post" action="/editrestoran/krugdostave/<%=restoran.rid%>">
+            <div class="form-group">
+                <input type="text" name="udaljenostdostave" class="form-control" placeholder="Unesite novi krug dostave" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger w-100">Ažuriraj krug dostave</button>
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
+<%if(proizvodi){%>
+<div class="row">
+    <div class="col-md-12 mt-4">
+        <h4 class="mb-3">Spisak proizvoda u ponudi restorana</h4>
+        <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Moguće je izmijeniti sliku proizvoda, naziv proizvoda te njegovu cijenu i opis.
+        </h6>
+        <table id="proizvodi" class="display dt-responsive nowrap" width="100%">
+            <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Opis</th>
+                <th>Cijena</th>
+                <th>Kategorija</th>
+                <th>Slika</th>
+                <th>Obriši</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%for(let i=0;i<proizvodi.length;++i){%>
+            <tr>
+                <td>
+                    <form method="post" action="/editrestoran/promjenanazivaproizvoda/<%=proizvodi[i].id%>">
+                        <input type="text" name="promjena_naziva_proizvoda" placeholder="<%=proizvodi[i].ime_proizvoda%>">
+                        <button type="submit" class="btn-sm btn-danger">Potvrdi</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="/editrestoran/promjenaopisaproizvoda/<%=proizvodi[i].id%>">
+                        <input type="text" name="promjena_opisa" placeholder="<%=proizvodi[i].opis%>">
+                        <button type="submit" class="btn-sm btn-danger">Potvrdi</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="/editrestoran/promjenacijeneproizvoda/<%=proizvodi[i].id%>/<%=proizvodi[i].cijena_proizvoda%>">
+                        <input type="text" name="promjena_cijene_proizvoda" placeholder="<%=proizvodi[i].cijena_proizvoda%> KM">
+                        <button type="submit" class="btn-sm btn-danger">Potvrdi</button>
+                    </form>
+                </td>
+                <td><%=proizvodi[i].ime_kategorije%></td>
+                <td>
+                    <form method="POST" action="/editrestoran/uploadslikeproizvoda/<%=proizvodi[i].id%>" enctype="multipart/form-data">
+                        <input type="file" name="image" />
+                        <input type="submit" name="btn_upload_profile_pic" value="Upload" />
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="/editrestoran/obrisiproizvod/<%=proizvodi[i].id%>">
+                        <span><input type="submit" value="Submit"></span>
+                    </form>
+                </td>
+            </tr>
+            <%}%>
+            </tbody>
+        </table>
+    </div>
+</div>
+<hr>
+<%}%>
+<%if(grupnimeni){%>
+<div class="row">
+    <div class="col-md-12 mt-4">
+        <h4 class="mb-3">Spisak grupnih menija u ponudi restorana</h4>
+        <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Imate mogućnost brisanja grupnog menija nakon isteka ponude. Grupni meni možete opet napraviti u opciji ispod.
+        </h6>
+        <table id="grupnimeni" class="display dt-responsive nowrap" width="100%">
+            <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Cijena</th>
+                <th>Obriši</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%for(let i=0;i<grupnimeni.length;++i){%>
+            <tr>
+                <td>
+                    <%=grupnimeni[i].naziv%>
+                </td>
+                <td>
+                    <%=grupnimeni[i].cijena%> KM
+                </td>
+                <td>
+                    <form method="post" action="/editrestoran/obrisigrupnimeni/<%=grupnimeni[i].id%>">
+                        <span><input type="submit" value="Delete"></span>
+                    </form>
+                </td>
+            </tr>
+            <%}%>
+            </tbody>
+        </table>
+    </div>
+</div>
+<hr>
+<%}%>
+<div class="row">
+    <div class="col-md-12 mt-4">
+        <h4 class="mb-3">Dodaj kategoriju u meni restorana</h4>
+        <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Imate mogućnost dodavanja kategorije koja će Vam koristiti prilikom dodavanja proizvoda.
+        </h6>
+        <form method="post" action="/editrestoran/kreirajkategoriju/<%=restoran.rid%>">
+            <div class="form-group">
+                <input type="text" name="naziv_kategorije" class="form-control" placeholder="Naziv kategorije" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger w-100">Kreiraj kategoriju</button>
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
+<%if(kategorije){%>
+<div class="row">
+    <div class="col-md-12 mt-4">
+        <h4 class="mb-3">Dodaj proizvod u meni restorana</h4>
+        <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Imate mogućnost dodavanja proizvoda u restoran. Nakon što ste kreirali proizvod odaberite sliku proizvoda u spisku svih proizvoda iznad.
+        </h6>
+        <form method="post" action="/editrestoran/kreirajproizvod/<%=restoran.rid%>">
+            <div class="form-group">
+                <input type="text" name="naziv_proizvoda" class="form-control" placeholder="Naziv proizvoda" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="opis_proizvoda" class="form-control" placeholder="Opis proizvoda" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="cijena_proizvoda" class="form-control" placeholder="Cijena proizvoda" required>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="kategorija_izbor">
+                    <option selected>Odaberite kategoriju proizvoda</option>
+                    <%for(let i=0;i<kategorije.length;++i){%>
+                        <option value="<%=kategorije[i].id%>"><%=kategorije[i].ime_kategorije%></option>
+                    <%}%>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger w-100">Kreiraj kategoriju</button>
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
+<%}%>
+
+<div class="row">
+    <div class="col-md-12 mt-4">
+        <h4 class="mb-3">Napravi grupni meni</h4>
+        <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Imate mogućnost pravljenja grupnog menija. Unesite proizvode koje želite grupirati u formatu 'Proizvod1 + Proizvod2' i unesite grupnu cijenu za njih.
+        </h6>
+        <form method="post" action="/editrestoran/kreirajgrupnimeni/<%=restoran.rid%>">
+            <div class="form-group">
+                <input type="text" name="naziv_grupnog_proizvoda" class="form-control" placeholder="Unesite proizvode koje želite grupirati" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="cijena_grupnog_proizvoda" class="form-control" placeholder="Cijena grupnog proizvoda" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger w-100">Kreiraj kategoriju</button>
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
+
+
+<script>
+    $(document).ready( function () {
+        $('#informacije').DataTable();
+    } );
+    $(document).ready( function () {
+        $('#proizvodi').DataTable();
+    } );
+    $(document).ready( function () {
+        $('#grupnimeni').DataTable();
+    } );
+
+</script>

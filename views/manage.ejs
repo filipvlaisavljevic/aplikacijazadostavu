@@ -1,0 +1,402 @@
+
+<div class="row">
+    <div class="col-md-12 mt-3">
+        <!-- Poruke korisniku -->
+        <div id="upozorenje" class="alert alert-warning mt-3 mb-1 ml-0 mr-03">
+            <strong>Greška!</strong> <span id="tekstualni-dio"></span>
+        </div>
+        <div id="uspjeh" class="alert alert-success mt-3 mb-1 ml-0 mr-0">
+            <strong>Info: </strong> <span id="tekstualni-dio-uspjeh"></span>
+        </div>
+        <!-- Kraj poruke -->
+        <h4 class="mt-3">Upravljaj korisnicima</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mt-3">
+        <table id="korisnici" class="display dt-responsive nowrap" style="width:100%;">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ime</th>
+                <th>Prezime</th>
+                <th>Email</th>
+                <th>Ulica</th>
+                <th>Rank</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <%for(let i=0;i<users.length;++i){%>
+            <tr id="<%=users[i].kid%>" class="trenutni-korisnik">
+                <td><%=users[i].kid%></td>
+                <td><%=users[i].i%></td>
+                <td><%=users[i].p%></td>
+                <td>
+                    <form>
+                        <input type="email" id="<%=users[i].kid%>" name="email" placeholder="<%=users[i].e%> " required><button type="button" class="btn-sm ml-1 btn-danger" onclick="updateEmail(<%=users[i].kid%>)">Potvrdi</button>
+                    </form>
+
+
+                </td>
+                <td><%=users[i].ulica%></td>
+                <td>
+                    <select id="promjena-ranka" name="<%=users[i].kid%>">
+                        <%for(let j=0;j<rankovi.length;++j){%>
+                            <%if(rankovi[j].naziv == users[i].rank){%>
+                            <option value="<%=rankovi[j].id%>"selected><%=rankovi[j].naziv%></option>
+                            <%} else{%>
+                            <option value="<%=rankovi[j].id%>"><%=rankovi[j].naziv%></option>
+                            <%}%>
+                        <%}%>
+                    </select>
+                </td>
+                <td><span id="izbrisi-korisnika" name="<%=users[i].kid%>"><i class="far fa-trash-alt"></i></span></td>
+            </tr>
+            <%}%>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<br>
+<hr>
+<div class="row">
+    <div class="col-md-12 mt-3">
+        <h4 class="mt-3 mb-3">Upravljaj restoranima</h4>
+        <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Klikom na edit dugme možete vršiti detaljnije promjene u restoranu kao što su promjena slike restorana, dodavanje proizvoda, promjena ulice i imena.</h6>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mt-3">
+        <table id="restorani" class="display dt-responsive nowrap" style="width:100%;">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Naziv</th>
+                <th>Kategorija</th>
+                <th>Adresa</th>
+                <th>Slika restorana</th>
+                <th>Vlasnik</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <%for(let i = 0;i<restorani.length;++i){%>
+            <tr id="restoran-<%=restorani[i].rid%>">
+                <td id="<%=restorani[i].rid%>"><a href="/editrestoran/<%=restorani[i].rid%>" class="uredi"><i class="fas fa-edit"></i> Uredi</a></td>
+                <td><%=restorani[i].nr%>
+
+                </td>
+                <td>
+                    <form>
+                        <input name="rid" id="<%=restorani[i].rid%>" type="text" placeholder="<%=restorani[i].kt%>">
+                        <button type="button" class="btn-sm ml-1 btn-danger" onclick="changeKategorija(<%=restorani[i].rid%>)">Potvrdi</button>
+                    </form>
+                </td>
+                <td><%=restorani[i].ulica%></td>
+                <td>
+                    <form method="POST" action="manage/uploadslike/<%=restorani[i].rid%>" enctype="multipart/form-data">
+                        <input type="file" name="image" />
+                        <input type="submit" name="btn_upload_profile_pic" value="Upload" />
+                    </form>
+                </td>
+                <td>
+                    <select id="promjena-vlasnika" name="<%=restorani[i].rid%>">
+                        <%for(let j=0;j<users.length;++j){%>
+                        <%if(users[j].kid == restorani[i].korid){%>
+                        <option value="<%=users[j].kid%>" selected><%=restorani[i].ime%> <%=restorani[i].prezime%></option>
+                        <%}else if(users[j].rank == 'Vlasnik restorana'){%>
+                            <option value="<%=users[j].kid%>"><%=users[j].i%> <%=users[j].p%></option>
+                            <%}%>
+                        <%}%>
+                    </select>
+                </td>
+                <td>
+                    <span id="izbrisi-restoran" name="<%=restorani[i].rid%>"><i class="far fa-trash-alt"></i></span>
+                </td>
+            </tr>
+            <%}%>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<br>
+<hr>
+<div class="row">
+    <div class="col-md-12 mt-3">
+        <h4 class="mt-3 mb-3">Kreiraj novog korisnika</h4>
+        <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Ukoliko kreirate dostavljača potrebno ga je 'zaposliti' odabirom njegovog korisničkog računa na dashboardu restorana.
+        </h6>
+        <form id="dodajKorisnika">
+            <div class="form-group">
+                <input type="text" name="ime" class="form-control" placeholder="Ime korisnika" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="prezime" class="form-control" placeholder="Prezime korisnika" required>
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" class="form-control" placeholder="Email adresa" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" class="form-control" placeholder="Lozinka korisnika" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="adresa" class="form-control" placeholder="Adresa korisnika" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="username" class="form-control" placeholder="Korisničko ime" required>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="role">
+                    <option value="1">Rank: Administrator</option>
+                    <option value="2">Rank: Vlasnik restorana</option>
+                    <option value="3">Rank: Dostavljač</option>
+                    <option value="4" selected>Rank: Korisnik</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger w-100">Kreiraj nalog</button>
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-12 mt-3">
+        <h4 class="mt-3 mb-3">Kreiraj novi restoran</h4>
+        <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Sliku restorana kao i proizvode i njihove slike je moguće promijeniti ili dodati na dashboardu restorana.</h6>
+        <form id="dodajRestoran">
+            <div class="form-group">
+                <input type="text" name="nazivrestorana" class="form-control" placeholder="Naziv restorana" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="kategorijarestorana" class="form-control" placeholder="Kategorija restorana" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="adresa" class="form-control" placeholder="Adresa restorana" required>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="vlasnikrestorana">
+                    <%for(let i=0;i<users.length;++i){%>
+                        <%if(users[i].rank == 'Vlasnik restorana'){%>
+                            <option value="<%=users[i].kid%>">Vlasnik restorana: <%=users[i].i%> <%=users[i].p%></option>
+                        <%}%>
+                    <%}%>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger w-100">Kreiraj restoran</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const $form2 = $('#dodajRestoran');
+
+    $form2.on('submit', submitHandler2);
+
+    function submitHandler2 (e) {
+        e.preventDefault()
+
+        $.ajax({
+            url: '/manage/kreirajRestoran',
+            type:'POST',
+            data: $form2.serialize()
+        }).done(response => {
+            Swal.fire(
+                'Uspješno!',
+                'Kreirali ste novi restoran. Možete ga urediti, dodati sliku i proizvode u svom panelu.',
+                'success'
+            )
+        })
+    }
+
+    const $form = $('#dodajKorisnika')
+
+    $form.on('submit', submitHandler)
+
+    function submitHandler (e) {
+        e.preventDefault()
+
+        $.ajax({
+            url: '/manage/kreirajNalog',
+            type:'POST',
+            data: $form.serialize()
+        }).done(response => {
+            Swal.fire(
+                'Uspješno!',
+                'Kreirali ste novi korisnički nalog.',
+                'success'
+            )
+        })
+    }
+
+    $('#upozorenje').css('display', 'none');
+    $('#uspjeh').css('display', 'none');
+    $(document).ready( function () {
+        $('#restorani').DataTable();
+    } );
+    $(document).ready( function () {
+        $('#korisnici').DataTable();
+    } );
+
+    // AJAX CRUD OPERACIJE
+    $(document).on('change','#promjena-ranka',function(){
+        promjeniRank(this.value,this.name);
+    });
+
+    $(document).on('change','#promjena-vlasnika',function(){
+        promjeniVlasnika(this.value,this.name);
+    });
+
+    $(document).on('click','#izbrisi-korisnika',function(){
+        izbrisiKorisnika(this.attributes["name"].value);
+    })
+
+    $(document).on('click','#izbrisi-restoran',function(){
+        izbrisiRestoran(this.attributes["name"].value);
+    })
+
+    function izbrisiRestoran(value) {
+        var data = value;
+        $("#restoran-"+data).hide();
+        $.ajax({
+            url: '/manage/izbrisiRestoran/'+data,
+            type: "GET",
+            data:data,
+            dataType: 'text',
+        })
+            .done(function(data){
+                Swal.fire(
+                    'Uspješno!',
+                    'Izbrisali ste restoran iz baze podataka.',
+                    'success'
+                )
+            });
+    }
+
+    function promjeniVlasnika(korisnik,id) {
+        var data = id;
+        var id = korisnik;
+        $.ajax({
+            url: '/manage/promjenaVlasnika/'+data+'/'+id,
+            type: "GET",
+            data:data,
+            dataType: 'text',
+        })
+            .done(function(data){
+                Swal.fire(
+                    'Uspješno!',
+                    'Promijenili ste vlasnika restorana.',
+                    'success'
+                )
+            });
+    }
+
+    function isEmail(email) {
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex.test(email);
+    }
+
+    function changeKategorija(id){
+        var data = $('input[id='+id+'][name=rid]').val();
+        $.ajax({
+            url: '/manage/promjenaKategorije/'+data+'/'+id,
+            type: "GET",
+            data:data,
+            dataType: 'text',
+        })
+            .done(function(data){
+                if(JSON.parse(data).greska){
+                    Swal.fire(
+                        'Greška!',
+                        'Kategorija nije validna ili ne sadrži dovoljan broj riječi.',
+                        'error'
+                    )
+                }else{
+                    Swal.fire(
+                        'Uspješno!',
+                        'Promijenili ste kategoriju odabranog restorana.',
+                        'success'
+                    )
+                }
+            });
+    }
+
+    function updateEmail(id){
+        var data = $('input[id='+id+']').val();
+        if(isEmail(data)){
+        $.ajax({
+            url: '/manage/promjenaMaila/'+data+'/'+id,
+            type: "GET",
+            data:data,
+            dataType: 'text',
+        })
+            .done(function(data){
+                if(JSON.parse(data).greska){
+                    Swal.fire(
+                        'Greška!',
+                        'Izgleda da email već postoji.',
+                        'error'
+                    )
+                }else{
+                    Swal.fire(
+                        'Uspješno!',
+                        'Promijenili ste email odabranog korisničkog računa.',
+                        'success'
+                    )
+                }
+            });}else{
+            Swal.fire(
+                'Greška!',
+                'Format emaila nije validan',
+                'error'
+            )
+        }
+    }
+
+
+    function izbrisiKorisnika(value) {
+        var data = value;
+        $.ajax({
+            url: '/manage/izbrisiKorisnika/'+data,
+            type: "GET",
+            data:data,
+            dataType: 'text',
+        })
+            .done(function(data){
+                $(".tr,#"+value).hide();
+                Swal.fire(
+                    'Uspješno!',
+                    'Izbrisali ste korisnika iz baze podataka.',
+                    'success'
+                )
+            });
+    }
+
+    function promjeniRank(value,korisnik) {
+        var data = value;
+        var id = korisnik;
+        $.ajax({
+            url: '/manage/promjenaRanka/'+data+'/'+id,
+            type: "GET",
+            data:data,
+            dataType: 'text',
+        })
+        .done(function(data){
+            Swal.fire(
+                'Uspješno!',
+                'Promijenili ste rank korisnika.',
+                'success'
+            )
+            });
+    }
+
+
+
+</script>

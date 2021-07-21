@@ -1,0 +1,45 @@
+<div class="container pb-3 pt-3" id="aplikacija">
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <%for(let i=0;i<statistika.length;i++){%>
+            <input id="mydiv"  value="<%=statistika[i].longituda%>" type="hidden">
+            <input id="mydiv2" value="<%=statistika[i].latituda%>" type="hidden">
+            <%}%>
+            <div id="map">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGpyZXRhMzI1IiwiYSI6ImNrajNkZXRzODNrbnoycm40ZXAwbHM2NXIifQ.x8UnTN6P2T7ywxGcqJfQCw';
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/streets-v11', // style URL
+    center: [18.413029,     43.856430], // starting position [lng, lat]
+    zoom: 11 // starting zoom
+    });
+
+    let x=document.querySelectorAll("[id='mydiv']");
+    let y=document.querySelectorAll("[id='mydiv2']");
+    for(let i=0;i<x.length;++i){
+        var marker = new mapboxgl.Marker({
+            color: getRandomColor(),
+            draggable: false
+        }).setLngLat([x[i].value,y[i].value])
+            .addTo(map);
+    }
+
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+
+
+</script>

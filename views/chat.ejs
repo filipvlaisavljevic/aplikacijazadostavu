@@ -1,0 +1,39 @@
+<div class="container pb-3 pt-3" id="aplikacija">
+    <div class="row">
+        <div class="col-md-12 mt-4">
+           <h4 class="mb-2">Chat sa administratorom</h4>
+            <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>
+                Pričekajte dok se prvi slobodan administrator priključi pozivu. Obavijestili smo ih.
+            </h6>
+            <hr>
+            <ul id="messages" class="chat"></ul>
+            <hr>
+            <form id="form" action="">
+                <input id="input" autocomplete="off"  style="border-radius: 5px; height: 35px;width:80%;"/><button class="btn btn-primary btn-sm ml-2 mb-1">Pošalji poruku</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var socket = io();
+
+    var messages = document.getElementById('messages');
+    var form = document.getElementById('form');
+    var input = document.getElementById('input');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value) {
+            socket.emit('chat message', input.value);
+            input.value = '';
+        }
+    });
+
+    socket.on('chat message', function(msg) {
+        var item = document.createElement('li');
+        item.textContent =  msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+</script>

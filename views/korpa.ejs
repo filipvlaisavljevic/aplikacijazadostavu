@@ -1,0 +1,30 @@
+<div class="container pb-3 pt-3" id="aplikacija">
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <h4 class="mb-3">Trenutna narudžba</h4>
+            <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Trenutni proizvodi koje želite naručiti. Nakon što sve dodate u Vašu korpu, molimo Vas da potvrdite narudžbu.</h6>
+            <hr>
+            <ul>
+           <%for(let i=0;i<korpa.length;++i){%>
+                <li>
+                    <h6><u style="color: #F9DC5C;">Proizvod</u> :
+                        <%=korpa[i].ime_proizvoda%> <%=korpa[i].kolicina%>x
+                        <form style="display: inline;" method="post" action="/korpa/ukloniproizvod/<%=korpa[i].nid%>/<%=korpa[i].pid%>">
+                            <button class="btn btn-light btn-sm ml-2" type="submit">Ukloni</button>
+                        </form>
+                    </h6>
+                    <ul><li><h6><%=korpa[i].opis%></h6></li></ul>
+                </li>
+            <%}%>
+            </ul>
+            <hr>
+            <h4>Total: <%=korpa[0].ukupna_cijena%> KM</h4>
+            <hr>
+            <form class="form-group" method="post" action="/korpa/posaljinarudzbu">
+                <input type="text" class="form-control mb-3" placeholder="Željeno vrijeme dostave (možete ostaviti prazno ukoliko želite odmah)" name="zeljeno_vrijeme">
+                <input type="text" class="form-control mb-3" placeholder="Broj Vašeg telefona" name="broj_telefona">
+                <button class="btn btn-danger form-control" type="submit">Potvrdi narudžbu</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,233 @@
+<div class="container pb-3 pt-3" id="aplikacija">
+<div class="card okvir-profila p-0">
+    <div class="card-body p-0">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="map">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+        <div class="col-md-5 pl-5 pt-3">
+            <!-- Osnovne informacije korisnika -->
+            <h1 style="font-weight: bold;">Podaci o korisniku</h1>
+            <ul class="profil ml-0 pl-0">
+                <li><b><i class="fas fa-signature"></i> Ime:</b>  <%=korisnik.ime%></li>
+                <li><b><i class="fas fa-signature"></i> Prezime:</b>  <%=korisnik.prezime%></li>
+                <li><b><i class="fas fa-street-view"></i> Ulica: </b><span id="ime_ulice"><%=korisnik.naziv_ulice%></span></li>
+                <li><b><i class="fas fa-user"></i> Username:</b>  <%=korisnik.username%></li>
+                <li><b><i class="fas fa-envelope"></i> Email:</b> <span id="email_polje"><%=korisnik.email%></span></li>
+                <li><b><i class="fas fa-users-cog"></i> Rank:</b> <%=korisnik.rank%></li>
+            </ul>
+            <!-- Kraj informacija -->
+        </div>
+
+
+
+        </div>
+
+        <!-- Poruke korisniku -->
+        <div id="upozorenje" class="alert alert-warning mt-3 mb-1 ml-3 mr-3">
+            <strong>Greška!</strong> <span id="tekstualni-dio"></span>
+        </div>
+        <div id="uspjeh" class="alert alert-success mt-3 mb-1 ml-3 mr-3">
+            <strong>Info: </strong> <span id="tekstualni-dio-uspjeh"></span>
+        </div>
+        <!-- Kraj poruke -->
+        <div class="pr-3 pl-3 pb-3">
+            <hr>
+
+            <!-- Osnovni CRUD za korisnika -->
+            <button type="button" class="btn btn-light w-100 text-left" id="dugme1">Promjena email adrese</button>
+            <form method="post" id="promjena_emaila" class="mt-2">
+                <a id="kruzic"><i class="far fa-times-circle mr-1"></i></a>
+                <input type="text" class="form-control" name="mail" required>
+                <button class="btn-primary form-control mt-1" type="submit" id="dugme2">Potvrdi promjenu emaila</button>
+            </form>
+
+            <hr>
+
+            <button type="button" class="btn btn-light w-100 text-left mt-2" id="dugme3">Promjena lozinke</button>
+            <form method="post" id="promjena_lozinke" class="mt-2">
+                <a id="kruzic2"><i class="far fa-times-circle mr-1"></i></a>
+                <input type="password" class="form-control" name="lozinka1" required>
+                <input type="password" class="form-control mt-1" name="lozinka2" required>
+                <button class="btn-primary form-control mt-1" type="submit" id="dugme5">Potvrdi promjenu lozinke</button>
+            </form>
+
+            <hr>
+            <button type="button" class="btn btn-light w-100 text-left mt-2" id="dugme4">Promjena adrese stanovanja</button>
+            <form method="post" id="promjena_adrese" class="mt-2">
+                <a id="kruzic3"><i class="far fa-times-circle mr-1"></i></a>
+                <input type="text" class="form-control mt-1" name="nova_adresa" required>
+                <button class="btn-primary form-control mt-1" type="submit" id="dugme6">Potvrdi promjenu adrese</button>
+            </form>
+            <%if(historija.length>0){%>
+            <h1 class="mt-5">Historija narudžbi korisnika: </h1>
+            <ul>
+            <%for(let i=0;i<historija.length;++i){%>
+                <%if(i==0){%><hr><%}%>
+                <li><span style="font-weight: bold;color: #F9DC5C;">#ID</span>: <%=i+1%></li>
+                <li><span style="font-weight: bold;color: #F9DC5C;">Restoran</span>: <%=historija[i].restoran%> </li>
+                <li><span style="font-weight: bold;color: #F9DC5C;">Broj telefona</span>: <%if(historija[i].telefon){%><%=historija[i].telefon%> <%}else{%>/<%}%></li>
+                <li><span style="font-weight: bold;color: #F9DC5C;">Željeno vrijeme</span>: <%if(historija[i].zeljeno_vrijeme){%><%=historija[i].zeljeno_vrijeme%>h <%}else{%>/<%}%></li>
+                <li><span style="font-weight: bold;color: #F9DC5C;">Ukupna cijena</span>: <%=historija[i].ukupna_cijena%> KM</li>
+                <hr>
+            <%}%>
+            </ul>
+            <%}%>
+        </div>
+    </div>
+    <!-- Kraj CRUD-a za korisnika -->
+</div>
+</div>
+
+
+<!-- AJAX skripte za CRUD -->
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGpyZXRhMzI1IiwiYSI6ImNrajNkZXRzODNrbnoycm40ZXAwbHM2NXIifQ.x8UnTN6P2T7ywxGcqJfQCw';
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/streets-v11', // style URL
+        center: [<%=korisnik.longituda%>, <%=korisnik.latituda%>], // starting position [lng, lat]
+        zoom: 17 // starting zoom
+    });
+    var marker = new mapboxgl.Marker({
+        color: "red",
+        draggable: false
+    }).setLngLat([<%=korisnik.longituda%>, <%=korisnik.latituda%>])
+        .addTo(map);
+
+    function updateMap(ulica){
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZGpyZXRhMzI1IiwiYSI6ImNrajNkZXRzODNrbnoycm40ZXAwbHM2NXIifQ.x8UnTN6P2T7ywxGcqJfQCw';
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/mapbox/streets-v11', // style URL
+            center: [ulica.latLng.lng, ulica.latLng.lat], // starting position [lng, lat]
+            zoom: 17 // starting zoom
+        });
+        var marker = new mapboxgl.Marker({
+            color: "red",
+            draggable: false
+        }).setLngLat([ulica.latLng.lng, ulica.latLng.lat])
+            .addTo(map);
+    }
+</script>
+<script>
+
+    $('#promjena_emaila').css('display', 'none');
+    $('#promjena_lozinke').css('display', 'none');
+    $('#promjena_adrese').css('display','none');
+    $('#upozorenje').css('display', 'none');
+    $('#uspjeh').css('display', 'none');
+
+    $("#dugme4").click(function (){
+       $('#promjena_adrese').show();
+       $('#kruzic3').show();
+       $('#dugme4').hide();
+    });
+
+    $('#kruzic3').click(function (){
+       $('#promjena_adrese').hide();
+       $('#dugme4').show();
+    });
+
+    $("#dugme1").click(function(){
+        $("#promjena_emaila").show();
+        $("#dugme1").hide();
+    });
+
+    $("#dugme3").click(function(){
+        $("#kruzic2").show();
+        $("#promjena_lozinke").show();
+        $("#dugme3").hide();
+    });
+
+    $("#kruzic2").click(function(){
+        $("#promjena_lozinke").hide();
+        $("#dugme3").show();
+    });
+
+    $("#dugme2").click(function(){
+        $("#dugme1").show();
+        $("#promjena_emaila").hide();
+    });
+
+    $("#kruzic").click(function(){
+        $("#promjena_emaila").hide();
+        $("#dugme1").show();
+    });
+
+    $("form#promjena_emaila").on('submit', function(e){
+        e.preventDefault();
+        var data = $('input[name=mail]').val();
+        $.ajax({
+            type: 'GET',
+            url: '/profil/promjenaEmaila/'+data,
+            data: data,
+            dataType: 'text'
+        })
+            .done(function(data){
+                $('#email_polje').html(JSON.parse(data).email);
+                if(JSON.parse(data).poruka){
+                    Swal.fire(
+                        'Oops!',
+                        'Email već postoji',
+                        'error'
+                    )
+                }else{
+                    Swal.fire(
+                        'Uspješno!',
+                        'Promijenili ste email',
+                        'success'
+                    )
+                }
+            });
+    });
+
+    $("form#promjena_lozinke").on('submit', function(e){
+        e.preventDefault();
+        if($('input[name=lozinka1]').val() != $('input[name=lozinka2]').val()){
+            Swal.fire(
+                'Oops!',
+                'Lozinke se ne podudaraju',
+                'error'
+            )
+        }else{
+            var data = $('input[name=lozinka1]').val();
+            $.ajax({
+                type: 'GET',
+                url: '/profil/promjenaLozinke/'+data,
+                data: data,
+                dataType: 'text'
+            })
+                .done(function(data){
+                    Swal.fire(
+                        'Uspješno!',
+                        'Promijenili ste lozinku',
+                        'success'
+                    )
+                });
+        }
+    });
+
+    $("form#promjena_adrese").on('submit', function(e){
+        e.preventDefault();
+        var data = $('input[name=nova_adresa]').val();
+        $.ajax({
+            type: 'GET',
+            url: '/profil/promjenaAdrese/'+data,
+            data: data,
+            dataType: 'text'
+        })
+            .done(function(data){
+                Swal.fire(
+                    'Uspješno!',
+                    'Promijenili ste adresu.',
+                    'success'
+                )
+                updateMap(JSON.parse(data).objekat_ulica);
+            });
+    });
+
+</script>

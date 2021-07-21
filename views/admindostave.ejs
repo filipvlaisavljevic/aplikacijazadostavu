@@ -1,0 +1,150 @@
+<div class="container pb-3 pt-3" id="aplikacija">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h4 class="mb-3 mt-4">Spisak aktivnih narudžbi</h4>
+            <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>
+                Narudžbe se dostavljačima dodjeljuju automatski. Svaki dostavljač nakon završene narudžbe označuje narudžbu kao završenu. Spisak trenutno aktivnih narudžbi dat je ispod.
+            </h6>
+            <%if(trenutnenarudzbe){%>
+            <table id="trenutnenarudzbe" class="display dt-responsive nowrap" width="100%">
+                <thead>
+                <tr>
+                    <th>Vrijeme narudžbe</th>
+                    <th>Dostavljač</th>
+                    <th>Cijena</th>
+                    <th>Restoran</th>
+                    <th></th>
+                    <th><u>Informacije o računu:</u></th>
+                </tr>
+                </thead>
+                <tbody>
+                <%for(let i=0;i<trenutnenarudzbe.length;++i){%>
+                <tr>
+                    <td>
+                        <%=trenutnenarudzbe[i].datum_narudzbe%>
+                    </td>
+                    <td>
+                         <form method="post" action="/admindostave/postavidostavljaca/<%=trenutnenarudzbe[i].nid%>">
+                            <select name="novidostavljac">
+                                <option selected><%=trenutnenarudzbe[i].kime%> <%=trenutnenarudzbe[i].kprezime%></option>
+                                <%for(let i=0;i<dostavljaci.length;++i){%>
+                                    <option value="<%=dostavljaci[i].kid%>"><%=dostavljaci[i].kime%> <%=dostavljaci[i].kprezime%></option>
+                                <%}%>
+                            </select>
+                             <button type="submit">Promijeni</button>
+                         </form>
+                    </td>
+                    <td>
+                        <%=trenutnenarudzbe[i].ukupna_cijena%> KM
+                    </td>
+                    <td>
+                       <%=trenutnenarudzbe[i].restoran%>
+                    </td>
+                    <td></td>
+                    <td>
+                        <br>
+                        Narudžba iz restorana: <b style="color:#F9DC5C !important;"><%=trenutnenarudzbe[i].restoran%></b>
+                        <br>
+                        Status
+                        <%if(trenutnenarudzbe[i].marker==0){%>
+                            : <b style="color:#E84855 !important;">nepoznat</b>
+                        <%}else if(trenutnenarudzbe[i].marker == 1){%>
+                            : <b style="color:deepskyblue !important;">krenuo po narudžbu</b>
+                        <%}else if(trenutnenarudzbe[i].marker == 2){%>
+                            : <b style="color:deepskyblue !important;">dostavljam narudžbu</b>
+                        <%}else{%>
+                            : <b style="color:greenyellow !important;">dostavljeno</b>
+                        <%}%>
+                        <br>
+                        <br>
+                        <u>Dostaviti:</u>
+                        <%for(let j=0;j<info[i].length;++j){%>
+                            <div><%=info[i][j].proizvod%> - <%=info[i][j].kolicina%> x <%=info[i][j].cijenap%> KM</div>
+                        <%}%>
+                        <br>Dostaviti na adresu: <%=trenutnenarudzbe[i].ulica%><br>
+                        Željeno vrijeme dostave:  <%if(trenutnenarudzbe[i].zeljenovrijeme){%><%=trenutnenarudzbe[i].zeljenovrijeme%>h<%}else{%> / <%}%><br>
+                        Ukupno: <%=trenutnenarudzbe[i].ukupna_cijena%> KM
+                    </td>
+                </tr>
+                <%}%>
+                </tbody>
+            </table>
+            <%}%>
+        </div>
+    </div>
+    <hr>
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h4 class="mb-3 mt-4">Spisak završenih narudžbi</h4>
+            <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>
+                Arhiva završenih dostava data je tabelom ispod sa računima narudžbe.
+            </h6>
+            <%if(gotovenarudzbe){%>
+            <table id="zavrsenenarudzbe" class="display dt-responsive nowrap" width="100%">
+                <thead>
+                <tr>
+                    <th>Vrijeme narudžbe</th>
+                    <th>Dostavljač</th>
+                    <th>Cijena</th>
+                    <th>Restoran</th>
+                    <th></th>
+                    <th><u>Informacije o računu:</u></th>
+                </tr>
+                </thead>
+                <tbody>
+                <%for(let i=0;i<gotovenarudzbe.length;++i){%>
+                <tr>
+                    <td>
+                        <%=gotovenarudzbe[i].datum_narudzbe%>
+                    </td>
+                    <td>
+                        <%=gotovenarudzbe[i].kime%> <%=gotovenarudzbe[i].kprezime%>
+                    </td>
+                    <td>
+                        <%=gotovenarudzbe[i].ukupna_cijena%> KM
+                    </td>
+                    <td>
+                        <%=gotovenarudzbe[i].restoran%>
+                    </td>
+                    <td></td>
+                    <td><br>
+                        Narudžba iz restorana: <b style="color:#F9DC5C !important;"><%=gotovenarudzbe[i].restoran%></b>
+                        <br>
+                        Status
+                        <%if(gotovenarudzbe[i].marker==0){%>
+                            : <b style="color:#E84855 !important;">nepoznat</b>
+                        <%}else if(gotovenarudzbe[i].marker == 1){%>
+                            : <b style="color:deepskyblue !important;">krenuo po narudžbu</b>
+                        <%}else if(gotovenarudzbe[i].marker == 2){%>
+                            : <b style="color:deepskyblue !important;">dostavljam narudžbu</b>
+                        <%}else{%>
+                            : <b style="color:greenyellow !important;">dostavljeno</b>
+                        <%}%>
+                        <br>
+                        <br>
+                        <u>Dostaviti:</u>
+                        <%for(let j=0;j<infog[i].length;++j){%>
+                        <div><%=infog[i][j].proizvod%> - <%=infog[i][j].kolicina%> x <%=infog[i][j].cijenap%> KM</div>
+                        <%}%>
+                        <br>Dostaviti na adresu: <%=gotovenarudzbe[i].ulica%><br>
+                        Željeno vrijeme dostave:  <%if(gotovenarudzbe[i].zeljenovrijeme){%><%=gotovenarudzbe[i].zeljenovrijeme%>h<%}else{%> / <%}%><br>
+                        Ukupno: <%=gotovenarudzbe[i].ukupna_cijena%> KM
+                    </td>
+                </tr>
+                <%}%>
+                </tbody>
+            </table>
+            <%}%>
+        </div>
+    </div>
+    <hr>
+</div>
+
+<script>
+    $(document).ready( function () {
+        $('#trenutnenarudzbe').DataTable();
+    } );
+    $(document).ready( function () {
+        $('#zavrsenenarudzbe').DataTable();
+    } );
+</script>

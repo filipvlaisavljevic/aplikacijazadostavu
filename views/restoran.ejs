@@ -1,0 +1,109 @@
+<div class="container pb-3" id="aplikacija">
+
+    <div class="row pt-3">
+        <div class="col-md-6 mt-3">
+            <div class="card">
+                <img class="card-img-top" src="../images/<%=restoran.slika%>">
+                <div class="card-body">
+                    <div class="row info">
+                        <div class="col-md-6">
+                            <h3><%=restoran.naziv_restorana%></h3>
+                        </div>
+                        <div class="col-md-6">
+                            <h3><i class="fas fa-map-marker-alt"></i> <%=restoran.naziv_ulice%></h3>
+                        </div>
+                    </div>
+                    <div class="row info">
+                        <div class="col-md-6">
+                            Radno vrijeme: <%=restoran.radnovrijeme%>
+                        </div>
+                    </div>
+                    <div class="row info">
+                        <div class="col-md-6">
+                            Dostava u krugu od: <%=restoran.udaljenostdostave%> km
+                        </div>
+                    </div>
+                    <div class="row info">
+                        <div class="col-md-12">
+                            Prosječna ocjena kupaca:
+                            <%for(let i=0;i<parseInt(ocjena);++i){%>
+                                <i class="fas fa-star"></i>
+                            <%}%>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-3">
+            <div class="card h-100">
+                <div class="card-body">
+                   <div id="mapr">
+
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%if(kategorije){%>
+    <div class="row pt-5 info">
+        <%for(let i=0;i<kategorije.length;++i){%>
+        <%if( kategorije[i].id){%>
+        <div class="col-md-12">
+            <h4><%=kategorije[i].ime_kategorije%></h4>
+            <hr>
+            <ul>
+                <%for(let j=0;j<proizvodi.length;++j){ var ima = false;%>
+                <%if(proizvodi[j].kategorija == kategorije[i].id){ if(proizvodi[j].kategorija == 11){ ima = true;}%>
+                <li>
+                    <div class="media">
+                        <div class="media-left">
+                            <div class="artikal" style="background-image: url('../images/<%=proizvodi[j].slika%>')">
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading"><%=proizvodi[j].ime_proizvoda%><span><i class="fas fa-coins"></i> <%=proizvodi[j].cijena_proizvoda%> KM</span>
+                                <%if(proizvodi[j].stara_cijena > proizvodi[j].cijena_proizvoda){%>
+                                <s style="font-size: 12px;"><%=proizvodi[j].stara_cijena%> KM</s>
+                                <%}%>
+                                <form style="float: right;" action="/restoran/dodaj/<%=proizvodi[j].id%>/<%=restoran.rid%>" method="post" class="mr-5">
+                                    <label for="quantity">Količina: </label>
+                                    <input type="number" id="quantity" name="quantity" min="1" max="5" style="width:40px; height: 33px;" value="1">
+                                    <button class="btn btn-light btn-sm" type="submit" style="margin-bottom:8px;">Dodaj u korpu</button>
+                                </form>
+                            </h4>
+                            <p style="font-size: 12px;"><%= proizvodi[j].opis%></p>
+                        </div>
+                    </div>
+                </li>
+                <%}%>
+                <%}%>
+                <%if(!ima && kategorije[i].id == 11){%>
+                    <div class="col-md-12">
+                        <h6>Trenutno nema specijalnih ponuda na meniju.</h6>
+                    </div>
+                <%}%>
+            </ul>
+        </div>
+        <%}%>
+        <%}%>
+
+    </div>
+    <%}%>
+</div>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGpyZXRhMzI1IiwiYSI6ImNrajNkZXRzODNrbnoycm40ZXAwbHM2NXIifQ.x8UnTN6P2T7ywxGcqJfQCw';
+    var map = new mapboxgl.Map({
+        container: 'mapr', // container id
+        style: 'mapbox://styles/mapbox/streets-v11', // style URL
+        center: [<%=restoran.longituda%>, <%=restoran.latituda%>], // starting position [lng, lat]
+        zoom: 17 // starting zoom
+    });
+    var marker = new mapboxgl.Marker({
+        color: "red",
+        draggable: false
+    }).setLngLat([<%=restoran.longituda%>, <%=restoran.latituda%>])
+        .addTo(map);
+</script>
+
+

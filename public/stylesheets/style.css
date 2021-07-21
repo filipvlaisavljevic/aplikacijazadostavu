@@ -1,0 +1,353 @@
+body{
+  background-color: #403F4C !important;
+  background-image: url('../images/bg.png');
+}
+
+#aplikacija{
+  background-color: #403F4c !important;
+
+}
+
+#header{
+  background-color: #F9DC5C !important;
+  border-bottom: 5px solid #403F4c;
+}
+
+#logo img{
+  width: 40%;
+  margin: auto;
+  padding: 15px;
+  background-color: rgba(64, 63, 76,0.7);
+}
+
+.navbar-light .navbar-nav .nav-link{
+  color: #403F4c !important;
+}
+
+#trenutni{
+  color: #E84855  !important;
+}
+
+.navbar-light .navbar-nav .nav-link:hover{
+  color: #E84855 !important;
+}
+
+.navbar-light .navbar-toggler-icon{
+  color: #403F4c !important;
+}
+
+.navbar a{
+  font-size: 25px;
+  font-family: 'Francois One', sans-serif;	color: #403F4c;
+}
+
+.navbar i{
+  font-size: 26px;
+}
+
+
+.btn-primary{
+  color: white !important;
+  font-weight: bold !important;
+  background-color: #E84855 !important;
+  border-color: grey !important;
+  border: 2px solid white !important;
+}
+
+.card{
+  border-radius: 10px !important;
+  background-color: #212529 !important;
+  color: white !important;
+}
+
+#footer{
+  border-top: 5px solid #403F4c;
+  background-color: #F9DC5C;
+}
+
+#footer .tekst{
+  padding: .5rem 1rem;
+}
+
+#footer h6{
+  padding: .5rem 1rem;
+  color: #403F4c;
+  font-size: 1rem;
+}
+
+
+a{
+  text-decoration: none !important;
+  color: white !important;
+}
+
+a:hover{
+  color:#F9DC5C !important ;
+}
+
+.card{
+  background-color: #403F4c !important;
+  border: 3px solid #F9DC5C !important;
+}
+
+.card-header,.card-footer{
+  border:none !important;
+}
+
+.sirina{
+  width: 100%;
+}
+
+#login{
+  background-color: #F9DC5C !important;
+  color: #403F4c !important;
+  border: none !important;
+}
+
+#footer i{
+  color: #403F4c;
+}
+
+
+.naslov{
+  color:white;
+  padding: 5px;
+  background-color: #E84855 !important;
+}
+
+@media (max-width: 576px) {
+  .card{width:100% !important; margin-right: 0 !important; }
+}
+
+
+.card{
+  margin-right: 3% !important;
+}
+
+
+
+.info i{
+  color: #E84855;
+}
+
+.info span{
+  margin-bottom: .5rem;
+  padding-left: 1.5%;
+}
+
+.info ul{
+  list-style-type: none;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 0 !important;
+}
+
+.info li{
+  margin-top: 2%;
+}
+
+.info h4{
+  color: #F9DC5C;
+}
+
+hr{
+  background-color: white !important;
+}
+
+h4,h5,h6{
+  color:white;
+}
+
+.artikal{
+  height: 80px;
+  width: 120px;
+  border: 3px solid white;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.media-body{
+  margin-left: 1% !important;
+}
+
+.logout{
+  border:0;
+  background:0;
+  color: #403F4c !important;
+  margin:0;
+  padding:0;
+}
+
+.logout:hover{
+  color: #E84855 !important;
+}
+
+.profil{
+  list-style-type: none;
+  color:white;
+  font-size: 20px;
+}
+
+.profil ul{
+  margin-left: 0 !important;
+}
+
+.okvir-profila{
+  padding-top: 1.5%;
+  margin-right: 0 !important;
+}
+
+#mapa{
+  border-bottom: 3px solid #F9DC5C ;
+}
+
+.profil i{
+  color: white !important;
+}
+
+.profil li b{
+  color: #F9DC5C;
+}
+
+.dataTables_wrapper{
+  background-color: #403F4c;
+}
+
+.dataTables_info{
+  color: white !important;
+}
+
+th{
+  color: black !important;
+  font-weight: bold;
+  background-color: #F9DC5C;
+}
+
+td{
+  background-color: #403F4c !important;
+  color: white;
+  font-weight: bold;
+  border-top: none !important;
+}
+
+.dataTable.no-footer{
+  border-bottom: none !important;
+}
+
+
+.dataTables_length{
+  color: white !important;
+}
+
+.dataTables_length select{
+  color: white !important;
+}
+
+.dataTables_length option{
+  color: black !important;
+}
+
+#table_id_filter{
+  color: white !important;
+}
+
+#sorting_asc{
+  color: red;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover{
+  color: red !important;
+}
+
+table.dataTable thead .sorting{
+  background-image: none !important;
+}
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate{
+  color: white !important;
+}
+
+.table .dataTable{
+  width: unset !important;
+}
+
+.uredi{
+  color: #F9DC5C !important;
+}
+
+#izbrisi-korisnika:hover{
+  color: #F9DC5C;
+}
+
+#izbrisi-restoran:hover{
+  color: #F9DC5C;
+}
+
+#map{
+  width: 100%;
+  height: 300px;
+}
+
+#mapr{
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+}
+
+input[type=file]{
+  color: white;
+}
+.txt-center {
+  text-align: center;
+}
+.hide {
+  display: none;
+}
+
+.clear {
+  float: none;
+  clear: both;
+}
+
+.rating {
+  width: 190px;
+  unicode-bidi: bidi-override;
+  direction: rtl;
+
+}
+
+.rating > label {
+
+  padding: 0;
+  margin: 0;
+  position: relative;
+  width: 1.1em;
+  cursor: pointer;
+  color: #F9DC5C;
+}
+
+.rating > label:hover,
+.rating > label:hover ~ label,
+.rating > input.radio-btn:checked ~ label {
+  color: transparent;
+}
+
+.rating > label:hover:before,
+.rating > label:hover ~ label:before,
+.rating > input.radio-btn:checked ~ label:before,
+.rating > input.radio-btn:checked ~ label:before {
+  content: "\2605";
+  position: absolute;
+  left: 0;
+  color: #FFD700;
+}
+
+#messages { list-style-type: none; margin: 0; padding: 0; }
+#messages > li {  color: white; font-weight: bold; padding: 10px; }
+#messages > li:nth-child(odd) { color: white; font-weight: bold; padding: 10px; }
+
+.chat{
+  background-color: transparent !important;
+}
+

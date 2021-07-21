@@ -1,0 +1,205 @@
+<div class="container pb-3 pt-3" id="aplikacija">
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <hr>
+            <h4 class="mb-3">Dodaj restoran za koji želite biti kurir</h4>
+            <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Odaberite restoran za koji želite biti kurir. U formi ispod možete ukloniti restoran za koji dostavljate trenutno.
+            <br>
+                <%if(gdjeradim.length >= 1){%>
+                <br>
+                Trenutno zaposlen u: <ul>
+                <%for(let i=0;i<gdjeradim.length;++i){%>
+                <li><%=gdjeradim[i].naziv_restorana%></li>
+                <%}%>
+                </ul>
+                <%}%>
+            </h6>
+            <form method="post" action="/dostavljac/zaposlime/<%=sesija.userID%>">
+                <div class="form-group">
+                    <select class="form-control" name="restoran_izbor">
+                        <option selected>Odaberite lokal</option>
+                        <%for(let i=0;i<svirestorani.length;++i){%>
+                            <option value="<%=svirestorani[i].id%>"><%=svirestorani[i].naziv_restorana%></option>
+                        <%}%>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-danger w-100">Zaposli me</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <hr>
+            <h4 class="mb-3">Prekinite dostavu sa lokalom</h4>
+            <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>Odaberite restoran za više ne želite dostavljati.
+            </h6>
+            <form method="post" action="/dostavljac/dajotkaz/<%=sesija.userID%>">
+                <div class="form-group">
+                    <select class="form-control" name="izbor_restorana">
+                        <option selected>Odaberite lokal</option>
+                        <%for(let i=0;i<gdjeradim.length;++i){%>
+                        <option value="<%=gdjeradim[i].id%>"><%=gdjeradim[i].naziv_restorana%></option>
+                        <%}%>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-danger w-100">Prekini dostavu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h4 class="mb-3 mt-4">Informacije o aktivnoj narudžbi</h4>
+            <%if(!aktivnenarudzbee){%>
+            <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>
+                Trenutno nemate aktivnih narudžbi.
+            </h6>
+            <%}else{%>
+            <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>
+                Trenutno aktivna narudžba nalazi se ispod. Molimo Vas da pri preuzimanju narudžbe označite da ste krenuli po narudžbu, prilikom dostavljanja da označite narudžbu markerom Dostavljam te nakon završetka da označite kraj narudzbe markerom Dostavljeno.
+            </h6>
+            <table id="aktivnenarudzbe" class="display dt-responsive nowrap" width="100%">
+                <thead>
+                <tr>
+                    <th>Vrijeme narudžbe</th>
+                    <th>Status narudžbe</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th><u>Informacije o računu:</u></th>
+                </tr>
+                </thead>
+                <tbody>
+                <%for(let i=0;i<aktivnenarudzbee.length;++i){%>
+                <tr>
+                    <td>
+                        <%=aktivnenarudzbee[i].datum_narudzbe%>
+                    </td>
+                    <td>
+                        <form method="post" action="/dostavljac/krenuoponarudzbu/<%=aktivnenarudzbee[i].nid%>">
+                            <button class="btn btn-warning" tyle="submit">Krenuo po narudžbu</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" action="/dostavljac/dostavljamnarudzbu/<%=aktivnenarudzbee[i].nid%>">
+                            <button class="btn btn-light" tyle="submit">Dostavljam</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" action="/dostavljac/dostavljenanarudzba/<%=aktivnenarudzbee[i].nid%>">
+                            <button class="btn btn-success" tyle="submit">Dostavljeno</button>
+                        </form>
+                    </td>
+                    <td></td>
+                    <td>
+                        <br>
+                        Narudžba iz restorana: <b style="color:#F9DC5C !important;"><%=aktivnenarudzbee[i].restoran%></b>
+                        <br>
+                        Status
+                        <%if(aktivnenarudzbee[i].marker==0){%>
+                            : <b style="color:#E84855 !important;">nepoznat</b>
+                        <%}else if(aktivnenarudzbee[i].marker == 1){%>
+                            : <b style="color:deepskyblue !important;">krenuo po narudžbu</b>
+                        <%}else if(aktivnenarudzbee[i].marker == 2){%>
+                            : <b style="color:deepskyblue !important;">dostavljam narudžbu</b>
+                        <%}else{%>
+                            : <b style="color:greenyellow !important;">dostavljeno</b>
+                        <%}%>
+                        <br>
+                        <br>
+                        <u>Dostaviti:</u>
+                        <%for(let j=0;j<info[i].length;++j){%>
+                        <div><%=info[i][j].proizvod%> - <%=info[i][j].kolicina%> x <%=info[i][j].cijenap%> KM</div>
+                        <%}%>
+                        <br>Dostaviti na adresu: <%=aktivnenarudzbee[i].ulica%><br>
+                        Željeno vrijeme dostave:  <%if(aktivnenarudzbee[i].zeljenovrijeme){%><%=aktivnenarudzbee[i].zeljenovrijeme%>h<%}else{%> / <%}%><br>
+                        Broj telefona: <%=aktivnenarudzbee[i].telefon%><br>
+                        Ukupno: <%=aktivnenarudzbee[i].ukupna_cijena%> KM
+                    </td>
+                </tr>
+                <%}%>
+                </tbody>
+            </table>
+            <%}%>
+        </div>
+    </div>
+    <hr>
+    <%if(gotovenarudzbee){%>
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h4 class="mb-3 mt-4">Spisak završenih narudžbi</h4>
+            <h6 class="mb-3"><i class="fas fa-info-circle mr-1"></i>
+                Ispod se nalaze informacije o Vašim prethodo obavljenim narudžbama.
+            </h6>
+            <table id="gotovenarudzbe" class="display dt-responsive nowrap" width="100%">
+                <thead>
+                <tr>
+                    <th>Vrijeme narudžbe</th>
+                    <th>Cijena</th>
+                    <th>Restoran</th>
+                    <th>Identifikator</th>
+                    <th></th>
+                    <th><u>Informacije o računu:</u></th>
+                </tr>
+                </thead>
+                <tbody>
+                <%for(let i=0;i<gotovenarudzbee.length;++i){%>
+                <tr>
+                    <td>
+                        <%=gotovenarudzbee[i].datum_narudzbe%>
+                    </td>
+                    <td>
+                        <%=gotovenarudzbee[i].ukupna_cijena%> KM
+                    </td>
+                    <td>
+                        <%=gotovenarudzbee[i].restoran%>
+                    </td>
+                    <td>
+                        <%=racun%>
+                    </td>
+                    <td></td>
+                    <td>
+                        <br>
+                        Narudžba iz restorana: <b style="color:#F9DC5C !important;"><%=gotovenarudzbee[i].restoran%></b><br>
+                        Status
+                        <%if(gotovenarudzbee[i].marker==0){%>
+                            : <b style="color:#E84855 !important;">nepoznat</b>
+                        <%}else if(gotovenarudzbee[i].marker == 1){%>
+                            : <b style="color:deepskyblue !important;">krenuo po narudžbu</b>
+                        <%}else if(gotovenarudzbee[i].marker == 2){%>
+                            : <b style="color:deepskyblue !important;">dostavljam narudžbu</b>
+                        <%}else{%>
+                            : <b style="color:greenyellow !important;">dostavljeno</b>
+                        <%}%>
+                        <br>
+                        <br>
+                        <u>Dostaviti:</u>
+                        <%for(let j=0;j<infog[i].length;++j){%>
+                        <div><%=infog[i][j].proizvod%> - <%=infog[i][j].kolicina%> x <%=infog[i][j].cijenap%> KM</div>
+                        <%}%>
+                        <br>Dostaviti na adresu: <%=gotovenarudzbee[i].ulica%><br>
+                        Željeno vrijeme dostave:  <%if(gotovenarudzbee[i].zeljenovrijeme){%><%=gotovenarudzbee[i].zeljenovrijeme%>h<%}else{%> / <%}%><br>
+                        Ukupno: <%=gotovenarudzbee[i].ukupna_cijena%> KM
+                    </td>
+                </tr>
+                <%}%>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr>
+    <%}%>
+</div>
+
+<script>
+    $(document).ready( function () {
+        $('#gotovenarudzbe').DataTable();
+    } );
+    $(document).ready( function () {
+        $('#aktivnenarudzbe').DataTable();
+    } );
+</script>

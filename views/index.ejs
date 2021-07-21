@@ -1,0 +1,29 @@
+<div class="container pb-3" id="aplikacija">
+        <div class="row">
+
+        </div>
+        <div class="row">
+
+            <%for(let i=0;i<restoran.length;++i){%>
+            <div class="col-md-3">
+                <div class="card mt-3">
+                    <img class="card-img-top" src="images/<%=restoran[i].slika%>">
+                    <%if(restoran[i].preporucen){%>
+                        <div style="width: 100%;background-color: #E84855;border-top: 2px solid #F9DC5C;border-bottom: 2px solid #F9DC5C;"><h6 style="font-weight: bold;" class="pt-2  pr-1 pl-1">Najpopularnije</h6></div>
+                    <%}%>
+                    <div class="card-body">
+                        <h5 class="card-title"><strong><%=restoran[i].naziv_restorana%></strong></h5>
+                        <p class="card-text"><strong>Adresa: </strong><%=restoran[i].nazivulice%></p>
+                        <p class="card-text"><strong>Kategorija: </strong><%=restoran[i].kategorija%></p>
+                        <a href="/restoran/<%=restoran[i].id%>" class="btn btn-primary">Pogledaj ponudu</a>
+                    </div>
+                </div>
+            </div>
+            <%}%>
+        </div>
+    </div>
+
+
+
+
+

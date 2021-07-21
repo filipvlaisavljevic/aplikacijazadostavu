@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GRIZ.BA</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../stylesheets/style.css">
+    <link href="../../stylesheets/fontawesome/css/all.css" rel="stylesheet">
+    <!-- FONTOVI -->
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <script src="http://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Francois+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- AJAX & BOOTSTRAP -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body>
+<!-- LAYOUT (prikazuje se na svakoj stranici kao template) -->
+
+<!-- DIO ZA LOGO -->
+<div class="container" id="logo">
+    <div class="row mt-3">
+        <img class="img-fluid" src="../images/logo.png">
+    </div>
+</div>
+<!-- KRAJ LOGO-a -->
+
+<!-- CONTAINER ZA CIJELU APLIKACIJU -->
+<div class="container mt-4">
+
+    <!-- NAVIGACIJA -->
+    <div class="row" id="header">
+        <nav class="navbar navbar-light navbar-expand-md">
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbar1">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link"  href="/">Početna</a>
+                    </li>
+                    <%if(sesija.userID){%>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profil">Moj profil</a>
+                    </li>
+                    <%}%>
+                    <%if(sesija.userID && sesija.role == 1){%>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manage">Manage</a>
+                        </li>
+                    <%}%>
+                    <%if(sesija.userID && sesija.role == 3){%>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/dostavljac/<%=sesija.userID%>">Moje dostave</a>
+                        </li>
+                    <%}%>
+                    <%if(sesija.userID && sesija.korpa && !sesija.potvrdjena){%>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/korpa/<%=sesija.korpa%>">Narudžba <i class="fas fa-shopping-cart"></i></a>
+                    </li>
+                    <%}%>
+                    <%if(sesija.userID && sesija.korpa && sesija.potvrdjena){%>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/status" style="color: #E84855 !important;">Status narudžbe <i class="fas fa-shopping-cart"></i></a>
+                    </li>
+                    <%}%>
+                    <%if(sesija.userID && sesija.role == 1){%>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admindostave">Upravljaj dostavama
+                                <%if(notifikacije>0){%><span style="background-color: #E84855;border-radius: 5px;color:white;padding-left:3px;padding-right: 3px;"><%=notifikacije%></span><%}%>
+                            </a>
+                        </li>
+                    <%}%>
+                    <%if(sesija.userID && sesija.role == 1){%>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manage/statistika">Statistika</a>
+                        </li>
+                    <%}%>
+                    <%if(sesija.userID && sesija.role == 2 && sesija.rid){%>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/editrestoran/<%=sesija.rid%>">Manage restoran</a>
+                        </li>
+                    <%}%>
+                    <%if(!sesija.userID){%>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Prijavi se</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Registruj se</a>
+                    </li>
+                     <%}%>
+                    <%if(sesija.userID && sesija.role == 4 || sesija.role == 1){%>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/support">Podrška</a>
+                        </li>
+                    <%}%>
+                    <%if(sesija.userID){%>
+                    <li class="nav-item">
+                        <a class="nav-link"><form method="post" action="/logout">
+                                <button class="logout">Logout</button>
+                            </form></a>
+                    </li>
+                    <%}%>
+                </ul>
+            </div>
+
+        </nav>
+    </div>
+    <!-- KRAJ NAVIGACIJE -->
+</div>
+<div class="container pb-3" id="aplikacija">
+    <%- body %>
+</div>
+<div class="container" id="aplikacija">
+    <!-- FOOTER -->
+    <div class="row" id="footer">
+        <div class="col-md-12 text-center">
+            <h6 class="pt-3">Copyright &copy; Filip Vlaisavljević</h6>
+        </div>
+        <div class="col-md-12 text-center pb-3">
+            <i class="fa fa-2x fa-facebook mr-3"></i>
+            <i class="fa fa-2x fa-instagram mr-3"></i>
+            <i class="fa fa-2x fa-twitter"></i>
+        </div>
+    </div>
+    <!-- KRAJ FOOTERA -->
+</div>
+<!-- KRAJ APLIKACIJE -->
+</div>
+</body>
+</html>
